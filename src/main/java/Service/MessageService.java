@@ -47,4 +47,8 @@ public class MessageService {
     public List<Message> all() {
         return messageDAO.all();
     }
+
+    public Message findById(int id) {
+        return messageDAO.findById(id);
+    }
 }

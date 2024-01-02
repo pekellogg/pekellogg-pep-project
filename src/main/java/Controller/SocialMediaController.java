@@ -29,6 +29,7 @@ public class SocialMediaController {
         app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
+        app.get("/messages/{message_id}", this::getMessageById);
         return app;
     }
 
@@ -93,6 +94,23 @@ public class SocialMediaController {
      */
     private void getAllMessagesHandler(Context ctx) {
         ctx.json(messageService.all());
+    }
+
+    /**
+     * Handler to retrieve message by ID.
+     * @param ctx the Javalin Context object handles information HTTP requests and generates responses. It will
+     *            be available to this method automatically thanks to the app.put method.
+     */
+    private void getMessageById(Context ctx) throws JsonProcessingException{
+        // ObjectMapper mapper = new ObjectMapper();
+        //Message message = mapper.readValue(ctx.body(), Message.class);
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.findById(message_id);
+        if (message != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.json(mapper.writeValueAsString(message));
+            //ctx.status(400);
+        }
     }
 
     /**

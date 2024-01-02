@@ -70,5 +70,36 @@ public class MessageDAO {
         }
         return messages;
     }
-
+    /**
+     * TO DO: Retrieve a specific account using its account ID.
+     * Remember that the format of a select where statement written as a Java String looks something like this:
+     * String sql = "select * from TableName where ColumnName = ?";
+     * The question marks will be filled in by the preparedStatement setString, setInt, etc methods. they follow
+     * this format, where the first argument identifies the question mark to be filled (left to right, starting
+     * from zero) and the second argument identifies the value to be used:
+     * preparedStatement.setInt(1,int1);
+     *
+     * @param id an account ID.
+     */
+    public Message findById(int id) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "SELECT * FROM message WHERE message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Message message = new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getLong("time_posted_epoch")
+                );
+                return message;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }
