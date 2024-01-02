@@ -51,4 +51,8 @@ public class MessageService {
     public Message findById(int id) {
         return messageDAO.findById(id);
     }
+
+    public Message deleteById(int id) {
+        return messageDAO.deleteById(id);
+    }
 }

@@ -19,8 +19,6 @@ public class SocialMediaController {
     }
 
     /**
-     * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
-     * suite must receive a Javalin object from this method.
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
     public Javalin startAPI() {
@@ -30,17 +28,17 @@ public class SocialMediaController {
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageById);
+        app.delete("/messages/{message_id}", this::deleteMessageById);
         return app;
     }
 
     /**
      * Handler to post a new account.
-     * The Jackson ObjectMapper will automatically convert the JSON of the POST request into a Register object.
+     * The Jackson ObjectMapper will automatically convert the JSON of the POST request into an Account object.
      * If accountService returns a null account (meaning posting an account was unsuccessful, the API will return a 400
      * message (client error).
-     * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
-     *            be available to this method automatically thanks to the app.post method.
-     * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
+     * @param ctx Javalin Context object
+     * @throws JsonProcessingException if there is an issue converting JSON into an object.
      */
     private void postAccountHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -55,8 +53,8 @@ public class SocialMediaController {
 
     /**
      * Handler to post a login.
-     * @param ctx the context object handles information HTTP requests and generates responses within Javalin
-     * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
+     * @param ctx Javalin Context object
+     * @throws JsonProcessingException if there is an issue converting JSON into an object.
      */
     private void postLoginHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -71,8 +69,8 @@ public class SocialMediaController {
 
     /**
      * Handler to post a message.
-     * @param ctx the context object handles information HTTP requests and generates responses within Javalin
-     * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
+     * @param ctx Javalin Context object
+     * @throws JsonProcessingException if there is an issue converting JSON into an object.
      */
     private void postMessageHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -89,8 +87,7 @@ public class SocialMediaController {
 
     /**
      * Handler to retrieve all messages.
-     * @param ctx the Javalin Context object handles information HTTP requests and generates responses. It will
-     *            be available to this method automatically thanks to the app.put method.
+     * @param ctx Javalin Context object
      */
     private void getAllMessagesHandler(Context ctx) {
         ctx.json(messageService.all());
@@ -98,18 +95,28 @@ public class SocialMediaController {
 
     /**
      * Handler to retrieve message by ID.
-     * @param ctx the Javalin Context object handles information HTTP requests and generates responses. It will
-     *            be available to this method automatically thanks to the app.put method.
+     * @param ctx Javalin Context object
      */
-    private void getMessageById(Context ctx) throws JsonProcessingException{
-        // ObjectMapper mapper = new ObjectMapper();
-        //Message message = mapper.readValue(ctx.body(), Message.class);
+    private void getMessageById(Context ctx) throws JsonProcessingException {
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.findById(message_id);
         if (message != null) {
             ObjectMapper mapper = new ObjectMapper();
             ctx.json(mapper.writeValueAsString(message));
-            //ctx.status(400);
+        }
+    }
+
+    /**
+     * Handler to delete message by ID.
+     * @param ctx Javalin Context object
+     */
+    private void deleteMessageById(Context ctx) throws JsonProcessingException {
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.findById(message_id);
+        if (message != null) {
+            messageService.deleteById(message.getMessage_id());
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.json(mapper.writeValueAsString(message));
         }
     }
 
