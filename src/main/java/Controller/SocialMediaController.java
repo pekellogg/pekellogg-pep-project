@@ -28,17 +28,9 @@ public class SocialMediaController {
         app.post("/register", this::postAccountHandler);
         app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
+        app.get("/messages", this::getAllMessagesHandler);
         return app;
     }
-
-    /**
-     * Handler to retrieve all accounts.
-     * @param ctx the Javalin Context object handles information HTTP requests and generates responses. It will
-     *            be available to this method automatically thanks to the app.put method.
-     */
-    // private void getAllAccountsHandler(Context ctx){
-    //     ctx.json(accountService.getAllAccounts());
-    // }
 
     /**
      * Handler to post a new account.
@@ -91,6 +83,16 @@ public class SocialMediaController {
         } else {
             ctx.json(mapper.writeValueAsString(messageService.addMessage(message)));
         }
+    }
+
+
+    /**
+     * Handler to retrieve all messages.
+     * @param ctx the Javalin Context object handles information HTTP requests and generates responses. It will
+     *            be available to this method automatically thanks to the app.put method.
+     */
+    private void getAllMessagesHandler(Context ctx) {
+        ctx.json(messageService.all());
     }
 
     /**

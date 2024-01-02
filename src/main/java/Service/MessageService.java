@@ -2,7 +2,7 @@ package Service;
 
 import Model.Message;
 import DAO.MessageDAO;
-// import Service.AccountService;
+import java.util.List;
 
 public class MessageService {
     MessageDAO messageDAO;
@@ -37,14 +37,14 @@ public class MessageService {
      *         inform our provide the front-end client with information about the added Message.
      */
     public Message addMessage(Message message) {
-        // int messageAuthor = message.getPosted_by();
-        // if (new AccountService().findById(messageAuthor).account_id == messageAuthor) {
-        //     String messageText = message.getMessage_text();
-        //     if (messageText.length() > 0  && messageText.length() <= 255) {
-        //         return messageDAO.insertMessage(message);
-        //     }   
-        // }
-        // return null;
         return messageDAO.insertMessage(message);
+    }
+
+    /**
+     * TO DO: Use the MessageDAO to retrieve a List containing all messages.
+     * @return all messages in the database.
+     */
+    public List<Message> all() {
+        return messageDAO.all();
     }
 }

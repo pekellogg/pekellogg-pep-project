@@ -2,7 +2,6 @@ package Service;
 
 import Model.Account;
 import DAO.AccountDAO;
-// import java.util.List;
 
 public class AccountService {
     AccountDAO accountDAO;
@@ -84,14 +83,4 @@ public class AccountService {
         }
         return accountDAO.getAccountById(account_id);
     }
-
-    /**
-     * TO DO: Use the AccountDAO to retrieve a List containing all accounts.
-     * @return all accounts in the database.
-     */
-    // public List<Account> getAllAccounts() {
-    //     return accountDAO.getAllAccounts();
-    // }
-
 }
-
