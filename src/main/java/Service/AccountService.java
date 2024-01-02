@@ -1,7 +1,6 @@
 package Service;
 
 import Model.Account;
-// import Model.Message;
 import DAO.AccountDAO;
 // import java.util.List;
 
@@ -23,7 +22,7 @@ public class AccountService {
     }
 
     /**
-     * TO DO: Use the AccountDAO to authorize a user account (login)
+     * TO DO: Use the AccountDAO to find a user account (login)
      *
      * This method should also return the added account. A distinction should be made between *transient* and
      * *persisted* objects - the *transient* account Object given as the parameter will not contain the account's id,
@@ -37,8 +36,12 @@ public class AccountService {
      * @return the newly added account if the add operation was successful, including the account_id. We do this to
      *         inform our provide the front-end client with information about the added Account.
      */
-    public Account loginAccount(Account account) {
-        return accountDAO.authenticateAccount(account);
+    public Account find(Account account) {
+        return accountDAO.find(account);
+    }
+
+    public Account findById(int id) {
+        return accountDAO.getAccountById(id);
     }
 
     /**

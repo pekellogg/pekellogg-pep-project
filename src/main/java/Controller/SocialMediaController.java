@@ -1,7 +1,8 @@
 package Controller;
 import Model.Account;
-// import Model.Message;
+import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
@@ -10,9 +11,11 @@ import io.javalin.http.Context;
 // TO DO: You will need to write your own endpoints and handlers for your controller
 public class SocialMediaController {
     AccountService accountService;
+    MessageService messageService;
 
     public SocialMediaController() {
         accountService = new AccountService();
+        messageService = new MessageService();
     }
 
     /**
@@ -24,6 +27,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.post("/register", this::postAccountHandler);
         app.post("/login", this::postLoginHandler);
+        app.post("/messages", this::postMessageHandler);
         return app;
     }
 
@@ -64,11 +68,28 @@ public class SocialMediaController {
     private void postLoginHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
-        Account foundAccount = accountService.loginAccount(account);
+        Account foundAccount = accountService.find(account);
         if (foundAccount == null) {
             ctx.status(401);
         } else {
             ctx.json(mapper.writeValueAsString(foundAccount));
+        }
+    }
+
+    /**
+     * Handler to post a message.
+     * @param ctx the context object handles information HTTP requests and generates responses within Javalin
+     * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
+     */
+    private void postMessageHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Account account = accountService.findById(message.getPosted_by());
+        String messageText = message.getMessage_text();
+        if (messageText.length() == 0  || messageText.length() > 255 || account == null) {
+            ctx.status(400);
+        } else {
+            ctx.json(mapper.writeValueAsString(messageService.addMessage(message)));
         }
     }
 

@@ -22,7 +22,7 @@ public class AccountDAO {
      * @param username an account's username
      * @param password an account's password
      */
-    public Account authenticateAccount(Account account) {
+    public Account find(Account account) {
         Connection connection = ConnectionUtil.getConnection();
         try {
             String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
