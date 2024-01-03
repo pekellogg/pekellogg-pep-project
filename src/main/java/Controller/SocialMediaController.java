@@ -27,16 +27,14 @@ public class SocialMediaController {
         app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
-        app.get("/messages/{message_id}", this::getMessageById);
-        app.delete("/messages/{message_id}", this::deleteMessageById);
+        app.get("/messages/{message_id}", this::getMessageByIdHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
+        app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
         return app;
     }
 
     /**
      * Handler to post a new account.
-     * The Jackson ObjectMapper will automatically convert the JSON of the POST request into an Account object.
-     * If accountService returns a null account (meaning posting an account was unsuccessful, the API will return a 400
-     * message (client error).
      * @param ctx Javalin Context object
      * @throws JsonProcessingException if there is an issue converting JSON into an object.
      */
@@ -97,7 +95,7 @@ public class SocialMediaController {
      * Handler to retrieve message by ID.
      * @param ctx Javalin Context object
      */
-    private void getMessageById(Context ctx) throws JsonProcessingException {
+    private void getMessageByIdHandler(Context ctx) throws JsonProcessingException {
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.findById(message_id);
         if (message != null) {
@@ -110,7 +108,7 @@ public class SocialMediaController {
      * Handler to delete message by ID.
      * @param ctx Javalin Context object
      */
-    private void deleteMessageById(Context ctx) throws JsonProcessingException {
+    private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException {
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.findById(message_id);
         if (message != null) {
@@ -121,29 +119,27 @@ public class SocialMediaController {
     }
 
     /**
-     * Handler to update an account.
-     * The Jackson ObjectMapper will automatically convert the JSON of the POST request into a Account object.
-     * to conform to RESTful standards, the account that is being updated is identified from the path parameter,
-     * but the information required to update an account is retrieved from the request body.
-     * If accountService returns a null account (meaning updating an account was unsuccessful), the API will return a 400
-     * status (client error).
-     *
-     * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
-     *            be available to this method automatically thanks to the app.put method.
-     * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
+     * Handler to update a message.
+     * @param ctxJavalin Context object
+     * @throws JsonProcessingException if there is an issue converting JSON into an object.
      */
-    // private void updateAccountHandler(Context ctx) throws JsonProcessingException {
-    //     ObjectMapper mapper = new ObjectMapper();
-    //     Account account = mapper.readValue(ctx.body(), Account.class);
-    //     int account_id = Integer.parseInt(ctx.pathParam("account_id"));
-    //     Account updatedAccount = accountService.updateAccount(account_id, account);
-    //     // System.out.println(updatedAccount);
-    //     if (updatedAccount == null) {
-    //         ctx.status(400);
-    //     } else {
-    //         ctx.json(mapper.writeValueAsString(updatedAccount));
-    //     }
-
-    // }
+    private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message messageUpdates = mapper.readValue(ctx.body(), Message.class);
+        int length = messageUpdates.getMessage_text().length();
+        if (length != 0 && length <= 255) {
+            Message updatedMessage = messageService.update(
+                Integer.parseInt(ctx.pathParam("message_id")),
+                messageUpdates
+            );
+            if (updatedMessage == null) {
+                ctx.status(400);
+            } else {
+                ctx.json(mapper.writeValueAsString(updatedMessage));
+            }
+        } else {
+            ctx.status(400);
+        }
+    }
 
 }

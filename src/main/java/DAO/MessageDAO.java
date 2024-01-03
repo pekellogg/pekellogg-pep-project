@@ -57,6 +57,7 @@ public class MessageDAO {
         }
         return messages;
     }
+
     /**
      * @param id a message ID.
      */
@@ -83,14 +84,6 @@ public class MessageDAO {
     }
 
     /**
-     * TO DO: Delete a specific message using its message ID.
-     * Remember that the format of a select where statement written as a Java String looks something like this:
-     * String sql = "select * from TableName where ColumnName = ?";
-     * The question marks will be filled in by the preparedStatement setString, setInt, etc methods. they follow
-     * this format, where the first argument identifies the question mark to be filled (left to right, starting
-     * from zero) and the second argument identifies the value to be used:
-     * preparedStatement.setInt(1,int1);
-     *
      * @param id a message ID.
      */
     public Message deleteById(int id) {
@@ -100,19 +93,28 @@ public class MessageDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
             preparedStatement.executeQuery();
-            // ResultSet rs = preparedStatement.executeQuery();
-            // while (rs.next()) {
-            //     Message message = new Message(
-            //         rs.getInt("message_id"),
-            //         rs.getInt("posted_by"),
-            //         rs.getString("message_text"),
-            //         rs.getLong("time_posted_epoch")
-            //     );
-            //     return message;
-            // }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
+
+    /**
+     * TO DO: Update the message identified by the message_id to the values contained in the message object.
+     * @param id a message ID.
+     * @param message a message object.
+     */
+    public void update(int id, Message message) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, message.getMessage_text());
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
