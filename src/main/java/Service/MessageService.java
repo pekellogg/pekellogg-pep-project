@@ -55,4 +55,12 @@ public class MessageService {
         messageDAO.update(message_id, message);
         return messageDAO.findById(message_id);
     }
+
+    /**
+     * @return all messages in the database.
+     */
+    public List<Message> allByAccountId(int account_id) {
+        return messageDAO.allByAccountId(account_id);
+    }
+
 }

@@ -2,9 +2,13 @@ package DAO;
 
 import Model.Message;
 import Util.ConnectionUtil;
-import java.sql.*;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MessageDAO {
     /**
@@ -43,7 +47,7 @@ public class MessageDAO {
             String sql = "SELECT * FROM message";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 Message message = new Message(
                     rs.getInt("message_id"),
                     rs.getInt("posted_by"),
@@ -52,7 +56,7 @@ public class MessageDAO {
                 );
                 messages.add(message);
             }
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return messages;
@@ -112,9 +116,62 @@ public class MessageDAO {
             preparedStatement.setString(1, message.getMessage_text());
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+
+    /**
+     * @return all messages by a specific account ID.
+     */
+    public List<Message> allByAccountId(int account_id) {
+        Connection connection = ConnectionUtil.getConnection();
+        List<Message> messages = new ArrayList<Message>();
+        try {
+            String sql = "SELECT * FROM message WHERE posted_by = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, account_id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Message message = new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getLong("time_posted_epoch")
+                );
+                messages.add(message);
+            }
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return messages;
+    }
+
+    // /**
+    //  * @param id an account ID.
+    //  * @param account an account object.
+    //  */
+    // public int count(int account_id) {
+    //     Connection connection = ConnectionUtil.getConnection();
+    //     try {
+    //         String sql = "COUNT(*) FROM message WHERE posted_by = ?";
+    //         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    //         preparedStatement.setInt(1, account_id);
+    //         ResultSet rs = preparedStatement.executeQuery();
+    //         System.out.println(rs);
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return 1;
+    // }
+
+    // /**
+    //  * @return all messages in the database.
+    //  */
+    // public boolean messageCount(int account_id) {
+    //     return count(account_id) > 0;
+    // }
 
 }

@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+// import java.util.ArrayList;
+import java.util.List;
 
 // TO DO: You will need to write your own endpoints and handlers for your controller
 public class SocialMediaController {
@@ -14,8 +16,8 @@ public class SocialMediaController {
     MessageService messageService;
 
     public SocialMediaController() {
-        accountService = new AccountService();
-        messageService = new MessageService();
+        this.accountService = new AccountService();
+        this.messageService = new MessageService();
     }
 
     /**
@@ -30,6 +32,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
         app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
+        app.get("/accounts/{account_id}/messages", this::getAccountMessagesHandler);
         return app;
     }
 
@@ -142,4 +145,15 @@ public class SocialMediaController {
         }
     }
 
+    /**
+     * Handler to retrieve an account's messages by account ID.
+     * @param ctx Javalin Context object
+     */
+    private void getAccountMessagesHandler(Context ctx) throws JsonProcessingException {
+        Account account = accountService.findById(Integer.parseInt(ctx.pathParam("account_id")));
+        List<Message> accountMessages = messageService.allByAccountId(account.getAccount_id());
+        if (account != null && accountMessages != null) {
+            ctx.json(accountMessages);
+        }
+    }
 }

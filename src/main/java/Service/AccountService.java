@@ -21,16 +21,6 @@ public class AccountService {
     }
 
     /**
-     * TO DO: Use the AccountDAO to find a user account (login)
-     *
-     * This method should also return the added account. A distinction should be made between *transient* and
-     * *persisted* objects - the *transient* account Object given as the parameter will not contain the account's id,
-     * because it is not yet a database record. When this method is used, it should return the full persisted account,
-     * which will contain the accounts's id. This way, any part of the application that uses this method has
-     * all information about the new account, because knowing the new account's ID is necessary. This means that the
-     * method should return the Account returned by the accountDAO's insertAccount method, and not the account provided by
-     * the parameter 'account'.
-     *
      * @param account an object representing a new Account.
      * @return the newly added account if the add operation was successful, including the account_id. We do this to
      *         inform our provide the front-end client with information about the added Account.
@@ -44,16 +34,6 @@ public class AccountService {
     }
 
     /**
-     * TO DO: Use the AccountDAO to add a new account to the database.
-     *
-     * This method should also return the added account. A distinction should be made between *transient* and
-     * *persisted* objects - the *transient* account Object given as the parameter will not contain the account's id,
-     * because it is not yet a database record. When this method is used, it should return the full persisted account,
-     * which will contain the accounts's id. This way, any part of the application that uses this method has
-     * all information about the new account, because knowing the new account's ID is necessary. This means that the
-     * method should return the Account returned by the accountDAO's insertAccount method, and not the account provided by
-     * the parameter 'account'.
-     *
      * @param account an object representing a new Account.
      * @return the newly added account if the add operation was successful, including the account_id. We do this to
      *         inform our provide the front-end client with information about the added Account.
@@ -63,11 +43,6 @@ public class AccountService {
     }
 
     /**
-     * TO DO: Use the AccountDAO to update an existing account from the database.
-     * You should first check that the account ID already exists. To do this, you could use an if statement that checks
-     * if accountDAO.getAccountById returns null for the account's ID, as this would indicate that the account id does not
-     * exist.
-     *
      * @param account_id the ID of the account to be modified.
      * @param account an object containing all data that should replace the values contained by the existing account_id.
      *         the account object does not contain an accound ID.
@@ -83,4 +58,5 @@ public class AccountService {
         }
         return accountDAO.getAccountById(account_id);
     }
+
 }
