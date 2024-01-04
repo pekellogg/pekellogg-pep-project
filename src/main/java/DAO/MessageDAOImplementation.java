@@ -16,13 +16,13 @@ public class MessageDAOImplementation implements MessageDAO {
      */
     @Override
     public Message insertMessage(Message message) {
-        Connection connection = ConnectionUtil.getConnection();
+        Connection conn = ConnectionUtil.getConnection();
         try {
             String sql = "INSERT INTO message (message_text) values (?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, message.getMessage_text());
-            preparedStatement.executeUpdate();
-            ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, message.getMessage_text());
+            ps.executeUpdate();
+            ResultSet pkeyResultSet = ps.getGeneratedKeys();
             if (pkeyResultSet.next()) {
                 int generated_message_id = (int) pkeyResultSet.getLong(1);
                 return new Message(
@@ -34,6 +34,7 @@ public class MessageDAOImplementation implements MessageDAO {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
@@ -43,12 +44,12 @@ public class MessageDAOImplementation implements MessageDAO {
      */
     @Override
     public List<Message> all() {
-        Connection connection = ConnectionUtil.getConnection();
-        List<Message> messages = new ArrayList<>();
+        Connection conn = ConnectionUtil.getConnection();
+        List<Message> messages = new ArrayList<Message>();
         try {
             String sql = "SELECT * FROM message";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Message message = new Message(
                     rs.getInt("message_id"),
@@ -60,6 +61,7 @@ public class MessageDAOImplementation implements MessageDAO {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return messages;
     }
@@ -69,12 +71,12 @@ public class MessageDAOImplementation implements MessageDAO {
      */
     @Override
     public Message findById(int id) {
-        Connection connection = ConnectionUtil.getConnection();
+        Connection conn = ConnectionUtil.getConnection();
         try {
             String sql = "SELECT * FROM message WHERE message_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            ResultSet rs = preparedStatement.executeQuery();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Message message = new Message(
                     rs.getInt("message_id"),
@@ -86,6 +88,7 @@ public class MessageDAOImplementation implements MessageDAO {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
@@ -95,14 +98,15 @@ public class MessageDAOImplementation implements MessageDAO {
      */
     @Override
     public Message deleteById(int id) {
-        Connection connection = ConnectionUtil.getConnection();
+        Connection conn = ConnectionUtil.getConnection();
         try {
             String sql = "DELETE FROM message WHERE message_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            preparedStatement.executeQuery();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.executeQuery();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
@@ -114,15 +118,16 @@ public class MessageDAOImplementation implements MessageDAO {
      */
     @Override
     public void update(int id, Message message) {
-        Connection connection = ConnectionUtil.getConnection();
+        Connection conn = ConnectionUtil.getConnection();
         try {
             String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, message.getMessage_text());
-            preparedStatement.setInt(2, id);
-            preparedStatement.executeUpdate();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, message.getMessage_text());
+            ps.setInt(2, id);
+            ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -130,14 +135,14 @@ public class MessageDAOImplementation implements MessageDAO {
      * @return all messages by a specific account ID.
      */
     @Override
-    public List<Message> allByAccountId(int account_id) {
-        Connection connection = ConnectionUtil.getConnection();
+    public List<Message> allByAccountId(int posted_by) {
+        Connection conn = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<Message>();
         try {
             String sql = "SELECT * FROM message WHERE posted_by = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, account_id);
-            ResultSet rs = preparedStatement.executeQuery();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, posted_by);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Message message = new Message(
                     rs.getInt("message_id"),
@@ -147,11 +152,11 @@ public class MessageDAOImplementation implements MessageDAO {
                 );
                 messages.add(message);
             }
-            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
+        System.out.println("messages: " + messages);
         return messages;
     }
 
@@ -160,12 +165,12 @@ public class MessageDAOImplementation implements MessageDAO {
     //  * @param account an account object.
     //  */
     // public int count(int account_id) {
-    //     Connection connection = ConnectionUtil.getConnection();
+    //     Connection conn = ConnectionUtil.getConnection();
     //     try {
     //         String sql = "COUNT(*) FROM message WHERE posted_by = ?";
-    //         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-    //         preparedStatement.setInt(1, account_id);
-    //         ResultSet rs = preparedStatement.executeQuery();
+    //         PreparedStatement ps = conn.prepareStatement(sql);
+    //         ps.setInt(1, account_id);
+    //         ResultSet rs = ps.executeQuery();
     //         System.out.println(rs);
     //     } catch (SQLException e) {
     //         e.printStackTrace();

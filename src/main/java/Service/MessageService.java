@@ -12,9 +12,6 @@ public class MessageService {
     }
 
     /**
-     * Constructor for messageService when messageDAO is provided.
-     * This is used for when a mock messageDAO is used in test cases.
-     * allows the testing of MessageService independently of MessageDAO.
      * @param messageDAO
      */
     public MessageService(MessageDAOImplementation messageDAO) {
@@ -23,8 +20,7 @@ public class MessageService {
 
     /**
      * @param message an object representing a new Message.
-     * @return the newly added message if the add operation was successful, including the message_id. We do this to
-     *         inform our provide the front-end client with information about the added Message.
+     * @return the newly added message if the add operation was successful, including the message_id.
      */
     public Message addMessage(Message message) {
         return messageDAO.insertMessage(message);
@@ -37,10 +33,16 @@ public class MessageService {
         return messageDAO.all();
     }
 
+    /**
+     * @return found message if successful. Otherwise returns null.
+     */
     public Message findById(int id) {
         return messageDAO.findById(id);
     }
 
+    /**
+     * @return deleted message if successful. If already deleted or unsuccessful delete operation, returns null.
+     */
     public Message deleteById(int id) {
         return messageDAO.deleteById(id);
     }
@@ -62,5 +64,4 @@ public class MessageService {
     public List<Message> allByAccountId(int account_id) {
         return messageDAO.allByAccountId(account_id);
     }
-
 }
