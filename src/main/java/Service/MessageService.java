@@ -1,14 +1,14 @@
 package Service;
 
 import Model.Message;
-import DAO.MessageDAO;
+import DAO.MessageDAOImplementation;
 import java.util.List;
 
 public class MessageService {
-    MessageDAO messageDAO;
+    MessageDAOImplementation messageDAO;
 
     public MessageService() {
-        messageDAO = new MessageDAO();
+        messageDAO = new MessageDAOImplementation();
     }
 
     /**
@@ -17,7 +17,7 @@ public class MessageService {
      * allows the testing of MessageService independently of MessageDAO.
      * @param messageDAO
      */
-    public MessageService(MessageDAO messageDAO) {
+    public MessageService(MessageDAOImplementation messageDAO) {
         this.messageDAO = messageDAO;
     }
 
