@@ -29,12 +29,12 @@ public class SocialMediaController {
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
-        app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
-        app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
-        app.get("/accounts/{account_id}/messages", this::getAccountMessagesHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageHandler);
+        app.patch("/messages/{message_id}", this::updateMessageHandler);
+        app.get("/accounts/{account_id}/messages", this::getMessagesByAccountHandler);
         return app;
     }
-
+    
     /**
      * Handler to post a new account.
      * @param ctx Javalin Context object
@@ -109,11 +109,11 @@ public class SocialMediaController {
      * Handler to delete message by ID.
      * @param ctx Javalin Context object
      */
-    private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException {
+    private void deleteMessageHandler(Context ctx) throws JsonProcessingException {
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.findById(message_id);
         if (message != null) {
-            messageService.deleteById(message.getMessage_id());
+            messageService.deleteById(message_id);
             ctx.json(message);
         }
     }
@@ -123,7 +123,7 @@ public class SocialMediaController {
      * @param ctxJavalin Context object
      * @throws JsonProcessingException if there is an issue converting JSON into an object.
      */
-    private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
+    private void updateMessageHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message messageUpdates = mapper.readValue(ctx.body(), Message.class);
         int length = messageUpdates.getMessage_text().length();
@@ -146,7 +146,7 @@ public class SocialMediaController {
      * Handler to retrieve an account's messages by account ID.
      * @param ctx Javalin Context object
      */
-    private void getAccountMessagesHandler(Context ctx) throws JsonProcessingException {
+    private void getMessagesByAccountHandler(Context ctx) throws JsonProcessingException {
         int account_id = Integer.parseInt(ctx.pathParam("account_id"));
         List<Message> accountMessages = messageService.allByAccountId(account_id);
         ctx.json(accountMessages);
