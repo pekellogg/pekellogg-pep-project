@@ -103,8 +103,7 @@ public class SocialMediaController {
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.findById(message_id);
         if (message != null) {
-            ObjectMapper mapper = new ObjectMapper();
-            ctx.json(mapper.writeValueAsString(message));
+            ctx.json(message);
         }
     }
 
