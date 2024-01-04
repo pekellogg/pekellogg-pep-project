@@ -151,10 +151,8 @@ public class SocialMediaController {
      * @param ctx Javalin Context object
      */
     private void getAccountMessagesHandler(Context ctx) throws JsonProcessingException {
-        Account account = accountService.findById(Integer.parseInt(ctx.pathParam("account_id")));
-        List<Message> accountMessages = messageService.allByAccountId(account.getAccount_id());
-        if (account != null && accountMessages != null) {
-            ctx.json(accountMessages);
-        }
+        int account_id = Integer.parseInt(ctx.pathParam("account_id"));
+        List<Message> accountMessages = messageService.allByAccountId(account_id);
+        ctx.json(accountMessages);
     }
 }

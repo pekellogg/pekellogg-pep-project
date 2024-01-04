@@ -103,7 +103,7 @@ public class MessageDAOImplementation implements MessageDAO {
             String sql = "DELETE FROM message WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
-            ps.executeQuery();
+            ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
