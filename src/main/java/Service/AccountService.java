@@ -1,13 +1,13 @@
 package Service;
 
 import Model.Account;
-import DAO.AccountDAO;
+import DAO.AccountDAOImplementation;
 
 public class AccountService {
-    AccountDAO accountDAO;
+    AccountDAOImplementation accountDAO;
 
     public AccountService() {
-        accountDAO = new AccountDAO();
+        accountDAO = new AccountDAOImplementation();
     }
 
     /**
@@ -16,7 +16,7 @@ public class AccountService {
      * This would allow the testing of AccountService independently of AccountDAO.
      * @param accountDAO
      */
-    public AccountService(AccountDAO accountDAO) {
+    public AccountService(AccountDAOImplementation accountDAO) {
         this.accountDAO = accountDAO;
     }
 
