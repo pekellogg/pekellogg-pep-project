@@ -3,21 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--    project metadata-->
+    <!-- project metadata -->
     <groupId>org.revature</groupId>
     <artifactId>Challenges</artifactId>
     <version>1.1</version>
-    <!--    maven allows us to change the version of java we'd like to use -->
+    <!-- specify version of java -->
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-    <!--    maven allows us to use external dependencies from mvn repository.
-            meaning, we're downloading java classes that other developers have written and can
-            use them in our projects!-->
+    <!-- external dependencies from mvn repository -->
     <dependencies>
+        <!-- junit: framework for writing unit tests -->
         <dependency>
-            <!-- junit, our framework for writing unit tests.-->
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
@@ -45,15 +43,13 @@
             <artifactId>h2</artifactId>
             <version>2.1.214</version>
         </dependency>
-        <!-- mockito allows for creating mock objects for use of testing service classes with a mock DAO.       -->
+        <!-- mockito: create mock objects for testing service classes with a mock DAO -->
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>4.9.0</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
